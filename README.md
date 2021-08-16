@@ -1,0 +1,1 @@
+# Automated-configuration-of-HDFS-cluster-by-Ansible
