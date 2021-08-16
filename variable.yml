@@ -1,0 +1,6 @@
+hwa_nn: "name"
+hwa_dn: 'data'
+hwa_folder_nn: '/nn'
+hwa_folder_dn: '/dn'
+hwa_ip: '192.168.43.199'
+hwa_port: "9001"

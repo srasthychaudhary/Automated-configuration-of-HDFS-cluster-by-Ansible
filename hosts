@@ -1,0 +1,5 @@
+[example]
+192.168.43.131 ansible_user=root ansible_ssh_pass=redhat ansible_connection=ssh
+
+[namenode]
+192.168.43.199 ansible_user=root ansible_ssh_pass=redhat ansible_connection=ssh

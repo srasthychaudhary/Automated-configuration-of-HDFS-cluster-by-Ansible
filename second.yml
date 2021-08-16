@@ -1,0 +1,95 @@
+- hosts: namenode
+  tasks:
+  - name: "creating directory"
+    file:
+            path: /nn
+            state: directory
+    register: x
+
+  - name: "format namenode"
+    shell: "echo Y | hadoop namenode -format"
+    ignore_errors: yes
+
+
+
+  - name: "starting namenode services in computer"
+    command: "hadoop-daemon.sh start namenode"
+
+  - name: "get jps details"
+    shell: "jps"
+    register: y
+
+  - debug:
+          var: y
+
+
+
+
+
+- hosts: example
+  vars_files: variable.yml
+  tasks:
+   - name: 'yum_repository module work'
+     yum_repository:
+            name: dvd1
+            description: 'this is AppStream file repo'
+            baseurl: '/dvd/AppStream'
+            gpgcheck: no
+
+   - name: 'yum_repository module work '
+     yum_repository:
+            name: dvd2
+            description: 'this is BaseOS file repo'
+            baseurl: '/dvd/BaseOS'
+            gpgcheck: no
+
+   - name: "copying files to example grp"
+     copy:
+            src: '/root/hadoop-1.2.1-1.x86_64.rpm'
+            dest: '/root/'
+     register: hadoop_file
+
+   - name: "copying jdk file to ecample grp"
+     copy:
+             src: '/root/jdk-8u171-linux-x64.rpm'
+             dest: '/root/'
+     register: jdk_file
+   - debug:
+             var: jdk_file 
+
+   - name: "installing jdk into node"
+     command: "rpm -ivh jdk-8u171-linux-x64.rpm"
+     ignore_errors: yes
+     when: jdk_file.changed == 'true'
+   
+   - name: "installing hadoop into node"
+     command: "rpm -ivh hadoop-1.2.1-1.x86_64.rpm --force"
+     ignore_errors: yes
+     when: hadoop_file.changed == 'true'
+
+   - name: "configuring hdfs-site.xml by copying file"
+     template:
+             src: /root/ansible_ws/hdfs-site.xml
+             dest: /etc/hadoop/hdfs-site.xml
+
+   - name: "congfiguration core-site.xml by copying file"
+     template:
+             src: /root/ansible_ws/core-site.xml
+             dest: /etc/hadoop/core-site.xml
+
+   - name: "creating workspace/directory for hadoop seprate in /"
+     file:
+             path: /dn
+             state: directory
+
+   - name: "starting datanode services.."
+     shell: "hadoop-daemon.sh start datanode"
+
+
+
+
+            
+
+
+
+
